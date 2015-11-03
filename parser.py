@@ -1,5 +1,7 @@
 import feedparser
 import datetime
+from sqlalchemy import create_engine, exc, insert
+from Table import *
 
 f = feedparser.parse('https://nvd.nist.gov/download/nvd-rss.xml')
 
@@ -32,17 +34,22 @@ class BDD(object):
         pass
 
     def connect(self):
-        pass
+        try:
+            engine = create_engine('mysql+pymysql://root:toor@localhost/vigilate')
+        except exc.OperationalError as err2:
+            exit("Can't create database : mysql %s" % err2)
 
     def add(self, cve):
-        pass
+        vulns = Vulns()
+        insert(vulns.vulns).values(cveid=cve.cveid, date=cve.date)
 
     
 if __name__ == "__main__":
 
     bdd = BDD()
     bdd.connect()
-    
+
+    c = CVE()
     for v in f["entries"]:
         c = CVE(v)
         print(c)
