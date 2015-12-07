@@ -3,12 +3,12 @@
 import argparse
 
 
-CVSS_first_level = {"AV": "Access Vector",
-                    "AC": "Access Complexity",
-                    "Au": "Authentication",
-                    "C": "Confidentiality Impact",
-                    "I": "Integrity Impact",
-                    "A": "Availability Impact"
+CVSS_first_level = {"AV": ("Access Vector", "This vulnerability can be accessed via %s."),
+                    "AC": ("Access Complexity", "The complexity of exploiting this vulnerability is %s."),
+                    "Au": ("Authentication", "This vulnerability %s authentification to be exploited."),
+                    "C": ("Confidentiality Impact", "This vulnerability lead to %s confidentiality impact."),
+                    "I": ("Integrity Impact", "This vulnerability lead to %s integrity impact."),
+                    "A": ("Availability Impact", "This vulnerability lead to %s availability impact.")
 }
 
 
@@ -26,19 +26,19 @@ CVSS_second_level = {"AV":
                      },
                      "Au":
                      {
-                         "N":"None",
+                         "N":"Requires no",
                          "S":"Requires single instance",
                          "M":"Requires multiple instances"
                      },
                      "C":
                      {
-                         "N":"None",
+                         "N":"No",
                          "P":"Partial",
                          "C":"Complete"
                      },
                      "I":
                      {
-                         "N":"None",
+                         "N":"No",
                          "P":"Partial",
                          "C":"Complete"
                      },
@@ -53,7 +53,9 @@ CVSS_second_level = {"AV":
 def parse(s):
     for e in s.split("/"):
         k,v = e.split(":")
-        print("%s: %s" % (CVSS_first_level[k], CVSS_second_level[k][v]))
+        print("%s:" % CVSS_first_level[k][0])
+        print(CVSS_first_level[k][1] % CVSS_second_level[k][v].lower())
+        print()
 
 
 if __name__ == "__main__":
